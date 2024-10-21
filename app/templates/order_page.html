@@ -1,0 +1,57 @@
+{% extends 'index_page.html' %}
+{% load static %}
+{% block page_title %}Clean service order{% endblock %}
+
+{% block content %}
+    <!--begin home section -->
+    <section class="home-section">
+
+
+		<!--begin container -->
+		<div class="container">
+            
+             
+              <div class="popular-services">
+
+                  <div class="row">
+
+                    <div class="inner-block col-lg-7">
+
+                        <div class="alert alert-success">Done! We got your order</div>
+                       
+                        <div class="popular-services__title mt-5 text-center">Order {{get_order.id}}</div>
+                         <div class="resume-order">
+                          <div class="">
+                              <div class="row" style="line-height:24px">
+
+                                  <div class="col-12">
+                                      <p>Name: {{get_order.customer_name}}</p>
+                                  </div>
+                                  <div class="col-12">
+                                      <p>Address: {{get_order.address}}</p>
+                                  </div>
+                                  <div class="col-12">
+                                      <p>{{get_order.order_list|safe}}</p>
+                                  </div>
+                              </div>
+
+                           <div class="row text-right" style="padding:0 20px">
+                                <div class="col-12 cena-ordercelkom">Total {{get_order.cost}} Euro</div>
+                            </div>
+                          </div>
+                          
+
+                    </div>
+                    <div class="col-2 col-lg-1"></div>
+                    </div>
+            </div>
+                  <a class="btnwhite" href="{% url 'index_page' %}">Back to main page</a>
+
+        </div>
+        <!--end container-->
+    
+    </section>
+    <!--end section-white -->
+
+
+{% endblock %}

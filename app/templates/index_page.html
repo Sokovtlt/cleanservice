@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <title>Clean service</title>
+    
+    <!-- Loading Bootstrap -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Loading Template CSS -->
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style-magnific-popup.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/reset.css' %}" rel="stylesheet">
+
+    <!-- Awsome Fonts -->
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+
+    <!-- Fonts -->
+   
+    <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap"
+    rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+    
+
+    <!-- Font Favicon -->
+    
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon-32x32.png' %}" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{% static 'images/favicon-16x16.png' %}" sizes="16x16" />
+    
+</head>
+
+<body>
+   
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark-my">
+    <div class="container">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+                  aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+         </button>
+
+          <a class="navbar-brand logo d-md-block flex-first" href="{% url 'index_page' %}">
+            <img src="{% static 'images/cleanservice-round.png' %}" alt="logo">
+          </a>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav ml-auto align-items-end">
+
+              
+
+              
+              <li class="discover-link">
+              <a class="nav-link" href="#">
+              <img src="{% static 'images/tel.png' %}" alt="">
+              <span class="mr-1">+555 555 555 555</span></a></li>
+              
+               <li class="discover-link">
+               <a class="nav-link" href="#">
+               <img src="{% static 'images/mail.png' %}" alt="">
+               <span>cleanservice@gmail.mail</span>
+               </a></li>
+
+
+
+       </ul>
+
+    </div>
+         
+    </div>       
+</nav>
+
+{% block content %}
+    <!--begin home section -->
+    <section class="home-section">
+
+
+		<!--begin container -->
+		<div class="container">
+          <div class="popular-services">
+        <div class="inner-block">
+           <div class="hide-block">
+            <h2 class="cistirna_title">Let us clean your clothes</h2>
+            <p class="cistirna_subtitle">Choose what you want to wash and iron, and we will take care of the rest!</p>
+            
+            </div>
+            
+                <!-- Category menu -->
+                <div class="row myBtnContainer hide-block">
+                    <div class=" mt-4 col-lg-12 text-center">
+                        <div id="myBtnContainer">
+                            <button class="btn active resume" onclick="filterSelection('all')">All category</button>
+                            {% for i in category %}
+                            <button class="btn resume" onclick="filterSelection('{{i}}')">{{i}}</button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- End Category menu  -->
+
+            
+            
+    <form as_ul id="add_form" method="post" class="register-form register">
+        {% csrf_token %}
+        <div class="container">
+            <div class="row popular-services-list margin-top-50 hide-block">
+            {% if clothes_list %}
+                {% for cloth in clothes_list %}
+                <!-- start item card-->
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 filterDiv mb30 {{cloth.category}}">
+                    <div class="popular-services__item">
+                        <div class="popular-services__item-body">
+                            <div class="icon">
+                                <img class="img-fluid aligncenter" src="{{cloth.img.url}}" alt="{{cloth.name}}">
+                            </div>
+                            <div class="popular-services__item-title">{{cloth.name|safe}}</div>
+                        </div>
+                        <div class="popular-services__item-sidebar">
+                            <div class="popular-services__item-price">{{cloth.price|floatformat:"0"}} Euro</div>
+                            <div class="input-number">
+                                <div class="input-number__minus">-</div>
+                                <input type="number" name="number" value="0" step="any" class="input-number__input-1
+                                item-quantity" data-id="{{ cloth.id }}" pattern="^[0-9]+$" required=""
+                                id="quantity_{{cloth.id}}">
+                                <div class="input-number__plus">+</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- start item card-->
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-success">
+                    There are no services here yet, they need to be added in the admin panel
+                </div>
+            {% endif %}
+            </div>
+
+              <div id="block-calculation" class="popular-services" style="display:none">
+                  <div class="row">
+
+                      <div class="inner-block col-12">
+
+                          <div class="popular-services__title mt-5 text-center">Your order</div>
+                          <div class="resume-order">
+                          <p class="objednavka-title">Items list:</p>
+
+                              <div id="clothes-container">
+                                <!-- output info from javascript -->
+                              </div>
+
+                          </div>
+
+                            <form as_ul id="add_form" method="post" class="register-form register">
+                                {% csrf_token %}
+                                <div>
+                                    {{form.customer_name}}
+                                    {{form.email}}
+                                    {{form.address}}
+                                    {{form.comment}}
+                                    {{form.calculation}}
+                                    {{form.cost}}
+                                </div>
+
+                                <div class="text-center row mt-3">
+                                   <button form="add_form" class="submitBnt btnwhite" type="submit">Submit</button>
+                                    <a href="/" class="btnwhite" type="button" id="backIndex" style="display:none">
+                                        Cancel</a>
+                                </div>
+
+                             </form>
+
+                      </div>
+
+                  </div>
+            </div>
+
+            <button  class="btnwhite" type="button" id="submitBtn">Continue to order</button>
+
+
+        </div>
+    </form><!--end register form -->
+                 
+        </div>
+    </div>
+
+        </div>
+        <!--end container-->
+    
+    </section>
+    <!--end section-white -->
+    
+{% endblock %}
+   
+    <!--begin footer -->
+    <div class="footer">
+
+        <!--begin container -->
+        <div class="container-fluid footer-bottom px-0">
+        
+            <!--begin row -->
+            <div class="row no-gutters mx-0">
+
+                <!--begin col-md-12 -->
+                <div class="col-md-12 text-center">
+                   
+                    <p>2021 <span class="template-name">Sergei Sokov</span></p>
+                    
+                </div>
+                <!--end col-md-6 -->
+                
+            </div>
+            <!--end row -->
+
+        </div>
+        <!--end container -->
+                
+    </div>
+    <!--end footer -->
+
+
+<!-- Load JS here for greater good =============================-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'js/wow.js' %}"></script>
+<script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+
+
+
+    <script>
+        var $ = jQuery.noConflict();
+
+        jQuery(($) => {
+            // input type number
+            // reduce by 1
+            $(document).on('click', '.input-number__minus', function () {
+                let total = $(this).next();
+                if (total.val() > 0) {
+                    total.val(+total.val() - 1);
+                }
+            });
+            // increase by 1
+            $(document).on('click', '.input-number__plus', function () {
+                let total = $(this).prev();
+                total.val(+total.val() + 1);
+            });
+
+            // ban for string type
+            document.querySelectorAll('.input-number__input').forEach(function (el) {
+                el.addEventListener('input', function () {
+                    this.value = this.value.replace(/[^\d]/g, '');
+                });
+            });
+        });
+
+
+        
+        
+filterSelection("all")
+function filterSelection(c) {
+  var x, i;
+  x = document.getElementsByClassName("filterDiv");
+  if (c == "all") c = "";
+  for (i = 0; i < x.length; i++) {
+    w3RemoveClass(x[i], "show");
+    if (x[i].className.indexOf(c) > -1) w3AddClass(x[i], "show");
+  }
+}
+
+function w3AddClass(element, name) {
+  var i, arr1, arr2;
+  arr1 = element.className.split(" ");
+  arr2 = name.split(" ");
+  for (i = 0; i < arr2.length; i++) {
+    if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
+  }
+}
+
+function w3RemoveClass(element, name) {
+  var i, arr1, arr2;
+  arr1 = element.className.split(" ");
+  arr2 = name.split(" ");
+  for (i = 0; i < arr2.length; i++) {
+    while (arr1.indexOf(arr2[i]) > -1) {
+      arr1.splice(arr1.indexOf(arr2[i]), 1);     
+    }
+  }
+  element.className = arr1.join(" ");
+}
+
+// Add active class to the current button (highlight it)
+var btnContainer = document.getElementById("myBtnContainer");
+var btns = btnContainer.getElementsByClassName("btn");
+for (var i = 0; i < btns.length; i++) {
+  btns[i].addEventListener("click", function(){
+    var current = document.getElementsByClassName("active");
+    current[0].className = current[0].className.replace(" active", "");
+    this.className += " active";
+  });
+}
+        
+
+$(function(){
+  new WOW().init(); 
+});
+
+// show the form
+$(document).on('click', '#submitBtn', function () {
+    $("#block-calculation").removeAttr('style', 'display:none');
+    $("#backIndex").removeAttr('style', 'display:none');
+    $("#submitBtn").attr('style', 'display:none');
+    $(".hide-block").attr('style', 'display:none');
+});
+
+document.getElementById('submitBtn').addEventListener('click', function() {
+    // Get all elements with class 'item-quantity'
+    let quantities = document.querySelectorAll('.item-quantity');
+
+    // Create empty array for data
+    let data = [];
+
+    // Take each element and save it id and quantity
+    quantities.forEach(function(item) {
+        let id = item.getAttribute('data-id');
+        let quantity = item.value;
+
+        // Check if quantity more than 0
+        if (quantity > 0) {
+            data.push({ id: id, quantity: quantity });
+        }
+    });
+
+    // Transform to JSON
+    let jsonData = JSON.stringify(data);
+
+    // Send data by POST request
+    fetch("{% url 'process_cloth_data' %}", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}', // CSRF token for protection
+        },
+        body: jsonData
+    })
+    .then(response => response.json())  // Transform answer to JSON
+    .then(data => {
+        console.log('Parsed JSON data:', data);  // We display data for debugging
+        const items = data.items;
+        const calculation_number = data.calculation;
+        const inputCalc = document.querySelector('#id_calculation');
+        inputCalc.value = calculation_number;
+        const order_cost = data.order_cost;
+        const inputCost = document.querySelector('#id_cost');
+        inputCost.value = order_cost;
+
+        if (Array.isArray(items)) {  // Check if items — is array
+            const container = document.getElementById('clothes-container');
+
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <div class="row objednavka-order">
+                        <div class="col-2 col-lg-1">
+                            <img class="img-responsive" src="${item.image}" width="50" alt="${item.name}">
+                        </div>
+                        <div class="col-4 col-lg-3 number-order">${item.number} x </div>
+                        <div class="col-4 col-lg-5 name-order">  ${item.name}  </div>
+                        <div class="col-2 cena-order">${item.cost} Euro</div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            // Show order cost
+            const orderCostDiv = document.createElement('div');
+            orderCostDiv.innerHTML = `
+                <div class="row">
+                    <div class="col-2 col-md-5 col-lg-4 col-xl-4"></div>
+                    <div class="col-5 col-md-4 col-lg-4 col-xl-4 name-ordercelkom">Total</div>
+                    <div class="col-5 col-md-3 col-lg-3 col-xl-3 cena-ordercelkom">${data.order_cost} Euro</div>
+                </div>
+            `;
+            container.appendChild(orderCostDiv);
+
+        } else {
+            console.error('items is not an array');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+</script>
+
+
+
+</body>
+</html>
